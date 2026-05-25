@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxeStore | Product Details</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    (function () {
+      const SUPABASE_URL = "https://jtodaxyrnshrvfbsvcru.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0b2RheHlybnNocnZmYnN2Y3J1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MTQxNDYsImV4cCI6MjA5MDA5MDE0Nn0.EIMCc_dWevt7C87xYHKAluqfpetFWRj_fvbJcNQHlvw";
+
+      const root = document.documentElement;
+      root.classList.add("site-settings-loading");
+
+      function applyTheme(settings) {
+        if (!settings) return;
+        if (settings.primary_color) root.style.setProperty("--gold", settings.primary_color);
+        if (settings.secondary_color) root.style.setProperty("--gold-dark", settings.secondary_color);
+        if (settings.accent_color) root.style.setProperty("--text", settings.accent_color);
+        if (settings.background_color) root.style.setProperty("--bg", settings.background_color);
+      }
+
+      try {
+        const cached = localStorage.getItem("site_settings_cache");
+        if (cached) {
+          applyTheme(JSON.parse(cached));
+        }
+      } catch (e) {}
+
+      window.__siteSettingsBoot = async function () {
+        try {
+          if (!window.db) {
+  window.db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+const { data, error } = await window.db
+            .from("site_settings")
+            .select("*")
+            .limit(1)
+            .maybeSingle();
+
+          if (!error && data) {
+            localStorage.setItem("site_settings_cache", JSON.stringify(data));
+            applyTheme(data);
+          }
+        } catch (e) {
+          console.error("Head site settings boot error:", e);
+        } finally {
+          root.classList.remove("site-settings-loading");
+          root.classList.add("site-settings-ready");
+        }
+      };
+
+      window.__siteSettingsBoot();
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#f3f3f3;
+      --text:#050505;
+      --gold:#d0aa2b;
+      --gold-dark:#c29a18;
+    }
+
+    html.site-settings-loading body,
+html.site-settings-ready body{
+  visibility: visible;
+}
+  </style>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="product-details">
+  <div id="pageLoader" class="page-loader">
+    <div class="loader-card">
+      <div class="loader-logo">AI</div>
+      <div class="loader-text">Loading experience...</div>
+      <div class="loader-bar">
+        <span></span>
+      </div>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand" aria-label="LuxeStore home">
+        <div class="brand-badge">AI</div>
+        <div class="brand-text" data-site-store-name>LuxeStore</div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" type="button" aria-label="Search" data-search-open>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M20 20l-3.5-3.5"></path>
+          </svg>
+        </button>
+        <a href="wishlist.html" class="icon-btn wishlist-header-link" aria-label="Wishlist" data-wishlist-link>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
+          </svg>
+          <span class="wishlist-count" id="wishlistCount">0</span>
+        </a>
+
+        <a href="login.html" class="icon-btn" aria-label="Account" data-account-link>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 21a8 8 0 0 0-16 0"></path>
+            <circle cx="12" cy="8" r="4"></circle>
+          </svg>
+        </a>
+
+        <a href="cart.html" class="icon-btn cart-link" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="9" cy="20" r="1"></circle>
+            <circle cx="18" cy="20" r="1"></circle>
+            <path d="M2 3h3l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 7H6"></path>
+          </svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+        <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+  <div class="mobile-nav-panel" id="mobileNavPanel" aria-hidden="true">
+    <nav class="mobile-nav-links" aria-label="Mobile navigation">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+  <main class="product-details-page">
+    <div class="product-top-breadcrumb">
+      <div class="container">
+        <div class="breadcrumb" id="productBreadcrumb">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <a href="shop.html">Shop</a>
+          <span>/</span>
+          <strong id="breadcrumbProductName"></strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <a href="shop.html" class="back-to-shop-link">
+        <span class="back-arrow">←</span>
+        <span>Back to Shop</span>
+      </a>
+
+      <section class="product-main-grid" id="productMainGrid">
+        <div class="product-gallery-col">
+          <div class="product-main-image-wrap">
+            <img id="productMainImage" src="" alt="" />
+          </div>
+
+          <div class="product-thumbs" id="productThumbs"></div>
+        </div>
+
+        <div class="product-info-col">
+          <div class="product-detail-badge" id="productCategoryBadge"></div>
+
+          <h1 class="product-detail-title" id="productTitle"></h1>
+
+          <div class="product-detail-rating-row">
+            <div class="product-detail-stars" id="productStars"></div>
+            <div class="product-detail-rating-text">
+              <span id="productRatingValue"></span>
+              <span id="productReviewCount"></span>
+            </div>
+          </div>
+
+          <div class="product-detail-price-row">
+            <span class="product-detail-price" id="productPrice"></span>
+            <span class="product-detail-old-price" id="productOldPrice"></span>
+            <span class="product-detail-save" id="productSave"></span>
+          </div>
+
+          <p class="product-detail-description" id="productDescription"></p>
+
+          <ul class="product-feature-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="1" y="5" width="15" height="10" rx="2"></rect>
+                <path d="M16 8h2.5a3.5 3.5 0 0 1 0 7H16"></path>
+                <circle cx="5.5" cy="17.5" r="1.5"></circle>
+                <circle cx="18.5" cy="17.5" r="1.5"></circle>
+              </svg>
+              <span>Free shipping on orders over $100</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3l7 4v5c0 5-3.4 8.3-7 9-3.6-.7-7-4-7-9V7l7-4z"></path>
+              </svg>
+              <span>2-year warranty included</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"></path>
+                <path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14z"></path>
+              </svg>
+              <span>Premium quality guarantee</span>
+            </li>
+          </ul>
+
+          <div id="productStockBox" class="product-stock-box" style="display:none;">
+            <div class="product-stock-top">
+              <span id="productStockBadge" class="product-stock-badge">In Stock</span>
+              <span id="productStockText" class="product-stock-text">0 available</span>
+            </div>
+          </div>
+
+          <div class="product-quantity-wrap">
+            <h3>Quantity</h3>
+            <div class="product-qty-row">
+              <button class="qty-btn" type="button" id="decreaseQty">-</button>
+              <span class="qty-value" id="productQtyValue">1</span>
+              <button class="qty-btn" type="button" id="increaseQty">+</button>
+            </div>
+          </div>
+
+          <div class="product-action-row">
+            <button class="product-add-cart-btn" id="productAddToCartBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="20" r="1"></circle>
+                <circle cx="18" cy="20" r="1"></circle>
+                <path d="M2 3h3l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 7H6"></path>
+              </svg>
+              <span>Add to Cart</span>
+            </button>
+
+            <button class="product-wishlist-btn" type="button" aria-label="Add to wishlist">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <p id="productDetailMessage" class="auth-message"></p>
+        </div>
+      </section>
+
+      <section class="product-reviews-section">
+        <div class="reviews-header">
+          <div class="reviews-summary">
+            <h3>Customer Reviews</h3>
+            <p id="reviewsSummaryText">This product does not have reviews yet.</p>
+          </div>
+      
+          <button class="open-review-form-btn" id="openReviewFormBtn" type="button">
+            Write a Review
+          </button>
+        </div>
+      
+        <div class="review-form-card" id="reviewFormCard">
+          <div class="review-form-grid">
+            <div class="review-rating-picker" id="reviewRatingPicker">
+              <button type="button" data-rating="1">★</button>
+              <button type="button" data-rating="2">★</button>
+              <button type="button" data-rating="3">★</button>
+              <button type="button" data-rating="4">★</button>
+              <button type="button" data-rating="5">★</button>
+            </div>
+      
+            <input
+              type="text"
+              class="review-input"
+              id="reviewTitleInput"
+              placeholder="Review title"
+            />
+      
+            <textarea
+              class="review-textarea"
+              id="reviewTextInput"
+              placeholder="Write your review..."
+            ></textarea>
+      
+            <button class="review-submit-btn" id="submitReviewBtn" type="button">
+              Submit Review
+            </button>
+      
+            <p class="auth-message" id="reviewMessage"></p>
+          </div>
+        </div>
+      
+        <div class="review-list" id="reviewList"></div>
+      </section>
+
+      <section class="recommended-products-section">
+        <div class="recommended-heading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"></path>
+            <path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14z"></path>
+          </svg>
+          <h2>AI Recommended Products</h2>
+        </div>
+
+        <div class="recommended-grid" id="recommendedGrid"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand-block">
+        <a href="index.html" class="brand footer-brand">
+          <div class="brand-badge">AI</div>
+          <div class="brand-text" data-site-store-name>LuxeStore</div>
+        </a>
+        <p data-site-footer-about>Premium AI-powered e-commerce platform for luxury products.</p>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="account.html">My Account</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="shipping.html">Shipping Info</a></li>
+          <li><a href="returns.html">Returns</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Stay Updated</h4>
+        <p>Subscribe to our newsletter for exclusive offers.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook" data-site-facebook>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+          </a>
+          <a href="#" aria-label="Instagram" data-site-instagram>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" aria-label="Twitter" data-site-twitter>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 12 7.5v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+            </svg>
+          </a>
+          <a href="#" aria-label="Email" data-site-social-email>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16v16H4z"></path>
+              <path d="M4 7l8 6 8-6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© 2026 <span data-site-store-name>LuxeStore</span>. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <button class="chat-toggle" id="chatToggle" type="button" aria-label="Open AI assistant">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+    </svg>
+  </button>
+
+  <div class="chat-widget" id="chatWidget" aria-hidden="true">
+    <div class="chat-header">
+      <div class="chat-title-wrap">
+        <div class="chat-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"></path>
+            <path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14z"></path>
+          </svg>
+        </div>
+        <div>
+          <h3>AI Assistant</h3>
+          <span>Always here to help</span>
+        </div>
+      </div>
+      <button class="chat-close" id="chatClose" type="button" aria-label="Close AI assistant">×</button>
+    </div>
+
+    <div class="chat-body">
+      <div class="chat-message">Hello! I'm your AI shopping assistant.<br />How can I help you today?</div>
+    </div>
+
+    <form class="chat-input-row" id="chatForm">
+      <input type="text" placeholder="Ask me anything..." aria-label="Ask AI" />
+      <button type="submit" aria-label="Send message">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M2 21l20-9L2 3l4.8 7L22 12 6.8 14 2 21z"></path>
+        </svg>
+      </button>
+    </form>
+  </div>
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+    <div class="search-backdrop" data-search-close></div>
+  
+    <div class="search-modal">
+      <div class="search-modal-top">
+        <h2>Search products</h2>
+        <button type="button" class="search-close-btn" data-search-close>×</button>
+      </div>
+  
+      <div class="search-input-wrap">
+        <input type="text" id="globalSearchInput" placeholder="Search for products..." autocomplete="off" />
+      </div>
+  
+      <div class="search-results" id="globalSearchResults">
+        <p class="search-empty">Start typing to search products.</p>
+      </div>
+    </div>
+  </div>
+  <script src="global.js"></script>
+</body>
+</html>

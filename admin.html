@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | LuxeStore</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="admin.css" />
+
+  <!-- Supabase UMD so window.supabase exists -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body data-page="admin-dashboard" class="admin-checking">
+  <div class="admin-app">
+    <aside class="admin-sidebar">
+      <div class="sidebar-top">
+        <a href="#" class="admin-brand">
+          <span class="brand-badge">AI</span>
+          <span class="brand-label">Admin</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="sidebar-link active" data-nav="dashboard">
+          <span class="sidebar-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </span>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="sidebar-link" data-nav="products">
+          <span class="sidebar-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2 20 6.5v11L12 22 4 17.5v-11L12 2Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 22V11.5M20 6.5l-8 5-8-5" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </span>
+          <span>Products</span>
+        </button>
+
+        <button class="sidebar-link" data-nav="orders">
+          <span class="sidebar-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M3 5h2l2 10h11l2-7H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="10" cy="19" r="1.5" fill="currentColor"/>
+              <circle cx="18" cy="19" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span>Orders</span>
+        </button>
+        <button class="sidebar-link" data-nav="reviews">
+          <span class="sidebar-icon">★</span>
+          <span>Reviews</span>
+        </button>
+
+        <button class="sidebar-link" data-nav="customers">
+          <span class="sidebar-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M20 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Customers</span>
+        </button>
+
+        <button class="sidebar-link" data-nav="knowledge">
+          <span class="sidebar-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </span>
+          <span>AI Knowledge</span>
+        </button>
+
+        <button class="sidebar-link" data-nav="customization">
+          <span class="sidebar-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 22a10 10 0 1 1 10-10c0 1.8-1.5 3.3-3.3 3.3H17a2 2 0 1 0 0 4h.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="7.5" cy="10.5" r="1.2" fill="currentColor"/>
+              <circle cx="12" cy="7.5" r="1.2" fill="currentColor"/>
+              <circle cx="16.5" cy="10.5" r="1.2" fill="currentColor"/>
+            </svg>
+          </span>
+          <span>Site Customization</span>
+        </button>
+
+        <button class="sidebar-link" data-nav="analytics">
+          <span class="sidebar-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M10 19V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M16 19V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M22 19H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Analytics</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar">AD</div>
+          <div class="sidebar-user-meta">
+            <strong id="adminUserName">Admin User</strong>
+            <span id="adminUserEmail">admin@example.com</span>
+          </div>
+        </div>
+
+        <button class="logout-btn" id="adminLogoutBtn">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M10 17l5-5-5-5M15 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Exit Admin</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <h1 id="adminPageTitle">Dashboard</h1>
+          <button class="mobile-logout-btn" id="mobileLogoutBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+
+      </header>
+
+      <section class="admin-page active" id="page-dashboard">
+        <div class="dashboard-top-grid">
+          <article class="metric-card">
+            <div class="metric-head">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 1 1 0 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="metric-trend positive" id="revenueTrend">Live</span>
+            </div>
+            <h2 id="totalRevenue">$0.00</h2>
+            <p>Total Revenue</p>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-head">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M3 5h2l2 10h11l2-7H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="10" cy="19" r="1.5" fill="currentColor"/>
+                  <circle cx="18" cy="19" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+              <span class="metric-trend positive" id="ordersTrend">Live</span>
+            </div>
+            <h2 id="totalOrders">0</h2>
+            <p>Total Orders</p>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-head">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2 20 6.5v11L12 22 4 17.5v-11L12 2Z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 22V11.5M20 6.5l-8 5-8-5" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <span class="metric-trend positive" id="productsTrend">Live</span>
+            </div>
+            <h2 id="totalProducts">0</h2>
+            <p>Products</p>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-head">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M20 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="metric-trend negative" id="customersTrend">Live</span>
+            </div>
+            <h2 id="totalCustomers">0</h2>
+            <p>Customers</p>
+          </article>
+        </div>
+
+        <div class="dashboard-mini-grid">
+          <article class="mini-card">
+            <div class="mini-row">
+              <span>Low Stock</span>
+              <strong class="mini-badge warning" id="lowStockCount">0</strong>
+            </div>
+            <small>Products with 5 or less in stock</small>
+          </article>
+
+          <article class="mini-card">
+            <div class="mini-row">
+              <span>Out of Stock</span>
+              <strong class="mini-badge danger" id="outOfStockCount">0</strong>
+            </div>
+            <small>Products that need restocking</small>
+          </article>
+
+          <article class="mini-card">
+            <div class="mini-row">
+              <span>Pending Orders</span>
+              <strong class="mini-badge yellow" id="pendingOrdersCount">0</strong>
+            </div>
+            <small>Orders waiting for action</small>
+          </article>
+
+          <article class="mini-card">
+            <div class="mini-row">
+              <span>Categories</span>
+              <strong class="mini-badge neutral" id="totalCategories">0</strong>
+            </div>
+            <small>Total store categories</small>
+          </article>
+        </div>
+
+        <div class="dashboard-panels">
+          <article class="dashboard-panel">
+            <div class="panel-head">
+              <h3>Recent Orders</h3>
+              <span class="panel-meta" id="recentOrdersMeta">Latest orders</span>
+            </div>
+            <div class="panel-body" id="recentOrdersList">
+              <div class="panel-empty">Loading recent orders...</div>
+            </div>
+          </article>
+
+          <article class="dashboard-panel">
+            <div class="panel-head">
+              <h3>Top Products</h3>
+              <span class="panel-meta" id="topProductsMeta">Best sellers</span>
+            </div>
+            <div class="panel-body" id="topProductsList">
+              <div class="panel-empty">Loading top products...</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="dashboard-bottom-grid">
+          <article class="dashboard-panel compact-panel">
+            <div class="panel-head">
+              <h3>Recent Customers</h3>
+              <span class="panel-meta">Newest signups</span>
+            </div>
+            <div class="panel-body" id="recentCustomersList">
+              <div class="panel-empty">Loading customers...</div>
+            </div>
+          </article>
+
+          <article class="dashboard-panel compact-panel">
+            <div class="panel-head">
+              <h3>Quick Insights</h3>
+              <span class="panel-meta">Live summary</span>
+            </div>
+            <div class="panel-body insights-body">
+              <div class="insight-row">
+                <span>Average Order Value</span>
+                <strong id="avgOrderValue">$0.00</strong>
+              </div>
+              <div class="insight-row">
+                <span>Active Products</span>
+                <strong id="activeProductsCount">0</strong>
+              </div>
+              <div class="insight-row">
+                <span>Featured Products</span>
+                <strong id="featuredProductsCount">0</strong>
+              </div>
+              <div class="insight-row">
+                <span>Completed Orders</span>
+                <strong id="completedOrdersCount">0</strong>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="admin-page" id="page-products">
+        <div class="products-page-head">
+          <div>
+            <h2 class="section-title">Products Management</h2>
+          </div>
+      
+          <button class="primary-btn add-product-btn" id="openAddProductBtn">
+            <span class="btn-plus">+</span>
+            <span>Add Product</span>
+          </button>
+        </div>
+      
+        <div class="search-bar-wrap">
+          <div class="search-bar">
+            <span class="search-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="productsSearchInput"
+              placeholder="Search products..."
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      
+        <div id="productsMessage" class="admin-message"></div>
+      
+        <div class="products-table-card">
+          <div class="products-table-head">
+            <div>Product</div>
+            <div>Category</div>
+            <div>Price</div>
+            <div>Stock</div>
+            <div>Status</div>
+            <div>Actions</div>
+          </div>
+      
+          <div id="productsTableBody" class="products-table-body">
+            <div class="panel-empty">Loading products...</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-page" id="page-orders">
+        <div class="orders-page-head">
+          <h2 class="section-title">Orders Management</h2>
+        </div>
+      
+        <div class="orders-stats-grid">
+          <article class="orders-stat-card">
+            <span>Total Orders</span>
+            <strong id="ordersStatTotal">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Processing</span>
+            <strong class="processing" id="ordersStatProcessing">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Shipped</span>
+            <strong class="shipped" id="ordersStatShipped">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Delivered</span>
+            <strong class="delivered" id="ordersStatDelivered">0</strong>
+          </article>
+        </div>
+      
+        <div class="orders-filters-row">
+          <div class="search-bar orders-search-bar">
+            <span class="search-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="ordersSearchInput"
+              placeholder="Search orders..."
+              autocomplete="off"
+            />
+          </div>
+      
+          <select id="ordersStatusFilter" class="orders-status-filter">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      
+        <div id="ordersMessage" class="admin-message"></div>
+      
+        <div class="orders-table-card">
+          <div class="orders-table-head">
+            <div>Order ID</div>
+            <div>Customer</div>
+            <div>Date</div>
+            <div>Items</div>
+            <div>Total</div>
+            <div>Status</div>
+            <div>Actions</div>
+          </div>
+      
+          <div id="ordersTableBody" class="orders-table-body">
+            <div class="panel-empty">Loading orders...</div>
+          </div>
+        </div>
+      </section>
+      <section class="admin-page" id="page-reviews">
+        <div class="products-page-head">
+          <div>
+            <h2 class="section-title">Reviews Management</h2>
+            <p class="knowledge-subtitle">Approve, delete, and feature customer reviews on the home page.</p>
+          </div>
+        </div>
+      
+        <div class="orders-stats-grid">
+          <article class="orders-stat-card">
+            <span>Total Reviews</span>
+            <strong id="reviewsStatTotal">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Approved</span>
+            <strong id="reviewsStatApproved">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Hidden</span>
+            <strong id="reviewsStatHidden">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Featured Home</span>
+            <strong id="reviewsStatFeatured">0</strong>
+          </article>
+        </div>
+      
+        <div id="reviewsMessage" class="admin-message"></div>
+      
+        <div id="reviewsAdminList" class="knowledge-list">
+          <div class="no-products-row">Loading reviews...</div>
+        </div>
+      </section>
+
+      <section class="admin-page" id="page-customers">
+        <div class="products-page-head">
+          <h2 class="section-title">Customers</h2>
+      
+          <button type="button" class="primary-btn add-product-btn" id="addCustomerBtn">
+            <span class="sidebar-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M19 8v6M22 11h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Add Customer
+          </button>
+        </div>
+      
+        <div class="customers-stats-grid">
+          <article class="orders-stat-card">
+            <span>Total Customers</span>
+            <strong id="customersStatTotal">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Total Revenue</span>
+            <strong id="customersStatRevenue">$0.00</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Total Orders</span>
+            <strong id="customersStatOrders">0</strong>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Avg. Order Value</span>
+            <strong id="customersStatAvg">$0.00</strong>
+          </article>
+        </div>
+      
+        <div class="search-bar-wrap">
+          <div class="search-bar">
+            <span class="search-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="customersSearchInput"
+              placeholder="Search customers..."
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      
+        <div id="customersMessage" class="admin-message"></div>
+      
+        <div class="customers-table-card">
+          <div class="customers-table-head">
+            <div>Customer</div>
+            <div>Email</div>
+            <div>Orders</div>
+            <div>Total Spent</div>
+            <div>Joined</div>
+            <div>Actions</div>
+          </div>
+      
+          <div id="customersTableBody" class="customers-table-body">
+            <div class="no-products-row">Loading customers...</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-page" id="page-knowledge">
+        <div class="products-page-head">
+          <div>
+            <h2 class="section-title">AI Knowledge Base</h2>
+            <p class="knowledge-subtitle">Manage FAQ and AI assistant knowledge</p>
+          </div>
+      
+          <button type="button" class="primary-btn add-product-btn" id="openAddKnowledgeBtn">
+            <span class="btn-plus">+</span>
+            Add Knowledge
+          </button>
+        </div>
+      
+        <div class="knowledge-stats-grid">
+          <article class="orders-stat-card">
+            <span>Total Questions</span>
+            <div class="knowledge-stat-row">
+              <strong id="knowledgeStatTotal">0</strong>
+              <div class="knowledge-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3l1.8 4.7L18 9.5l-4.2 1.8L12 16l-1.8-4.7L6 9.5l4.2-1.8L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M19 3v4M21 5h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>Categories</span>
+            <div class="knowledge-stat-row">
+              <strong id="knowledgeStatCategories">0</strong>
+              <div class="knowledge-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3l1.8 4.7L18 9.5l-4.2 1.8L12 16l-1.8-4.7L6 9.5l4.2-1.8L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M19 3v4M21 5h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </article>
+      
+          <article class="orders-stat-card">
+            <span>AI Readiness</span>
+            <div class="knowledge-stat-row">
+              <strong id="knowledgeStatReadiness">0%</strong>
+              <div class="knowledge-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3l1.8 4.7L18 9.5l-4.2 1.8L12 16l-1.8-4.7L6 9.5l4.2-1.8L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M19 3v4M21 5h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </article>
+        </div>
+      
+        <div id="knowledgeMessage" class="admin-message"></div>
+      
+        <div id="knowledgeList" class="knowledge-list">
+          <div class="no-products-row">Loading knowledge...</div>
+        </div>
+      </section>
+
+      <section class="admin-page" id="page-customization">
+        <div class="customization-page-head">
+          <div>
+            <h2 class="section-title">Site Customization</h2>
+            <p class="knowledge-subtitle">Customize your store's appearance and content</p>
+          </div>
+      
+          <div class="customization-head-actions">
+            <button type="button" class="primary-btn" id="saveCustomizationBtn">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 21h14a2 2 0 0 0 2-2V7.8a2 2 0 0 0-.59-1.41l-2.8-2.8A2 2 0 0 0 16.2 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M7 21v-6h10v6M8 3v5h8V3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              Save Changes
+            </button>
+          </div>
+        </div>
+      
+        <div id="customizationMessage" class="admin-message"></div>
+      
+        <div class="customization-card">
+          <div class="customization-tabs">
+            <button type="button" class="customization-tab active" data-custom-tab="brand">Brand</button>
+            <button type="button" class="customization-tab" data-custom-tab="colors">Colors</button>
+            <button type="button" class="customization-tab" data-custom-tab="contact">Contact</button>
+            <button type="button" class="customization-tab" data-custom-tab="social">Social Media</button>
+            <button type="button" class="customization-tab" data-custom-tab="content">Content</button>
+          </div>
+      
+          <div class="customization-body">
+            <!-- BRAND -->
+            <div class="customization-panel active" id="customization-panel-brand">
+              <div class="form-group full">
+                <label for="siteStoreName">Store Name</label>
+                <input type="text" id="siteStoreName" />
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteTagline">Tagline</label>
+                <input type="text" id="siteTagline" />
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteDescription">Store Description</label>
+                <textarea id="siteDescription" rows="4"></textarea>
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteFooterAbout">Footer About Text</label>
+                <textarea id="siteFooterAbout" rows="4"></textarea>
+              </div>
+            </div>
+      
+            <!-- COLORS -->
+            <div class="customization-panel" id="customization-panel-colors">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="sitePrimaryColor">Primary Color</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="sitePrimaryColorPicker" value="#d4af37" />
+                    <input type="text" id="sitePrimaryColor" value="#d4af37" />
+                  </div>
+                </div>
+      
+                <div class="form-group">
+                  <label for="siteSecondaryColor">Secondary Color</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="siteSecondaryColorPicker" value="#b8941f" />
+                    <input type="text" id="siteSecondaryColor" value="#b8941f" />
+                  </div>
+                </div>
+              </div>
+      
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="siteAccentColor">Accent Color</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="siteAccentColorPicker" value="#000000" />
+                    <input type="text" id="siteAccentColor" value="#000000" />
+                  </div>
+                </div>
+      
+                <div class="form-group">
+                  <label for="siteBackgroundColor">Background Color</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="siteBackgroundColorPicker" value="#ffffff" />
+                    <input type="text" id="siteBackgroundColor" value="#ffffff" />
+                  </div>
+                </div>
+              </div>
+      
+              <div class="color-preview-box">
+                <h3>Color Preview</h3>
+                <div class="color-preview-grid">
+                  <div class="color-preview-item">
+                    <div class="color-preview-swatch" id="previewPrimary"></div>
+                    <span>Primary</span>
+                  </div>
+      
+                  <div class="color-preview-item">
+                    <div class="color-preview-swatch" id="previewSecondary"></div>
+                    <span>Secondary</span>
+                  </div>
+      
+                  <div class="color-preview-item">
+                    <div class="color-preview-swatch" id="previewAccent"></div>
+                    <span>Accent</span>
+                  </div>
+      
+                  <div class="color-preview-item">
+                    <div class="color-preview-swatch" id="previewBackground"></div>
+                    <span>Background</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- CONTACT -->
+            <div class="customization-panel" id="customization-panel-contact">
+              <div class="form-group full">
+                <label for="siteEmail">Email Address</label>
+                <input type="email" id="siteEmail" />
+              </div>
+      
+              <div class="form-group full">
+                <label for="sitePhone">Phone Number</label>
+                <input type="text" id="sitePhone" />
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteAddress">Address</label>
+                <textarea id="siteAddress" rows="3"></textarea>
+              </div>
+      
+              <div class="section-divider"></div>
+      
+              <h3 class="custom-subtitle">Shipping & Tax Settings</h3>
+      
+              <div class="form-row form-row-3">
+                <div class="form-group">
+                  <label for="siteFreeShippingThreshold">Free Shipping Threshold ($)</label>
+                  <input type="number" id="siteFreeShippingThreshold" min="0" step="0.01" />
+                </div>
+      
+                <div class="form-group">
+                  <label for="siteStandardShipping">Standard Shipping ($)</label>
+                  <input type="number" id="siteStandardShipping" min="0" step="0.01" />
+                </div>
+      
+                <div class="form-group">
+                  <label for="siteExpressShipping">Express Shipping ($)</label>
+                  <input type="number" id="siteExpressShipping" min="0" step="0.01" />
+                </div>
+              </div>
+      
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="siteTaxRate">Tax Rate (%)</label>
+                  <input type="number" id="siteTaxRate" min="0" step="0.01" />
+                </div>
+      
+                <div class="form-group checkbox-field">
+                  <label class="check-wrap custom-check-wrap">
+                    <input type="checkbox" id="siteIncludeTax" />
+                    <span>Include tax in prices</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+      
+            <!-- SOCIAL -->
+            <div class="customization-panel" id="customization-panel-social">
+              <div class="form-group full">
+                <label for="siteFacebookUrl">Facebook URL</label>
+                <input type="url" id="siteFacebookUrl" />
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteInstagramUrl">Instagram URL</label>
+                <input type="url" id="siteInstagramUrl" />
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteTwitterUrl">Twitter / X URL</label>
+                <input type="url" id="siteTwitterUrl" />
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteSocialEmail">Social Media Contact Email</label>
+                <input type="email" id="siteSocialEmail" />
+              </div>
+            </div>
+      
+            <!-- CONTENT -->
+            <div class="customization-panel" id="customization-panel-content">
+              <div class="form-group full">
+                <label for="siteShippingPage">Shipping Information Page</label>
+                <textarea id="siteShippingPage" rows="10"></textarea>
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteReturnsPage">Returns Policy Page</label>
+                <textarea id="siteReturnsPage" rows="10"></textarea>
+              </div>
+      
+              <div class="form-group full">
+                <label for="sitePrivacyPage">Privacy Policy Page</label>
+                <textarea id="sitePrivacyPage" rows="10"></textarea>
+              </div>
+      
+              <div class="form-group full">
+                <label for="siteTermsPage">Terms & Conditions Page</label>
+                <textarea id="siteTermsPage" rows="10"></textarea>
+              </div>
+      
+              <div class="customization-tip">
+                <strong>Tip:</strong> You can use markdown formatting in these fields. Use # for headings, ## for subheadings, and - for bullet points.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-page" id="page-analytics">
+        <div class="analytics-page-head">
+          <div>
+            <h2 class="section-title">Analytics</h2>
+          </div>
+      
+          <div class="analytics-updated" id="analyticsUpdatedText">Last updated: Just now</div>
+        </div>
+      
+        <div class="analytics-top-grid">
+          <article class="analytics-metric-card">
+            <div class="analytics-metric-top">
+              <div class="analytics-metric-icon revenue">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 1 1 0 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="analytics-metric-trend positive" id="analyticsRevenueTrend">+0%</span>
+            </div>
+            <strong id="analyticsTotalRevenue">$0.00</strong>
+            <span>Total Revenue</span>
+          </article>
+      
+          <article class="analytics-metric-card">
+            <div class="analytics-metric-top">
+              <div class="analytics-metric-icon orders">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M3 5h2l2 10h11l2-7H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="10" cy="19" r="1.5" fill="currentColor"/>
+                  <circle cx="18" cy="19" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+              <span class="analytics-metric-trend positive" id="analyticsOrdersTrend">+0%</span>
+            </div>
+            <strong id="analyticsTotalOrders">0</strong>
+            <span>Total Orders</span>
+          </article>
+      
+          <article class="analytics-metric-card">
+            <div class="analytics-metric-top">
+              <div class="analytics-metric-icon customers">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M20 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="analytics-metric-trend positive" id="analyticsCustomersTrend">+0%</span>
+            </div>
+            <strong id="analyticsTotalCustomers">0</strong>
+            <span>Total Customers</span>
+          </article>
+      
+          <article class="analytics-metric-card">
+            <div class="analytics-metric-top">
+              <div class="analytics-metric-icon avg">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 16l5-5 4 4 7-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="analytics-metric-trend neutral">Avg</span>
+            </div>
+            <strong id="analyticsAvgOrderValue">$0.00</strong>
+            <span>Avg Order Value</span>
+          </article>
+        </div>
+      
+        <div class="analytics-chart-grid">
+          <article class="analytics-card">
+            <h3>Revenue Trend (7 Days)</h3>
+            <div class="analytics-chart-wrap">
+              <canvas id="revenueTrendChart"></canvas>
+            </div>
+          </article>
+      
+          <article class="analytics-card">
+            <h3>Orders Trend (7 Days)</h3>
+            <div class="analytics-chart-wrap">
+              <canvas id="ordersTrendChart"></canvas>
+            </div>
+          </article>
+        </div>
+      
+        <div class="analytics-bottom-grid">
+          <article class="analytics-card">
+            <h3>Top Selling Products</h3>
+            <div id="analyticsTopProductsList" class="analytics-list-wrap">
+              <div class="panel-empty">No sales data available</div>
+            </div>
+          </article>
+      
+          <article class="analytics-card">
+            <h3>Low Stock Alerts</h3>
+            <div id="analyticsLowStockList" class="analytics-list-wrap">
+              <div class="panel-empty">All products are well stocked</div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <!-- PRODUCT MODAL -->
+<div class="admin-modal" id="productModal" aria-hidden="true">
+    <div class="admin-modal-backdrop" data-close-product-modal></div>
+  
+    <div class="admin-modal-dialog">
+      <div class="admin-modal-head">
+        <h2 id="productModalTitle">Add New Product</h2>
+        <button type="button" class="modal-close-btn" id="closeProductModalBtn" aria-label="Close">
+          ×
+        </button>
+      </div>
+  
+      <form id="productForm" class="product-form">
+        <input type="hidden" id="productId" />
+  
+        <div class="form-group full">
+          <label for="productName">Product Name</label>
+          <input type="text" id="productName" required />
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="productPrice">Price</label>
+            <input type="number" id="productPrice" min="0" step="0.01" required />
+          </div>
+  
+          <div class="form-group">
+            <label for="productComparePrice">Original Price (Optional)</label>
+            <input type="number" id="productComparePrice" min="0" step="0.01" />
+          </div>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="productCategory">Category</label>
+            <select id="productCategory" required>
+              <option value="">Select category</option>
+            </select>
+          </div>
+  
+          <div class="form-group">
+            <label for="productStock">Stock Quantity</label>
+            <input type="number" id="productStock" min="0" step="1" value="0" required />
+          </div>
+        </div>
+  
+        <div class="form-group full">
+            <label for="productSlug">Slug</label>
+            <input type="text" id="productSlug" />
+          </div>
+  
+        <div class="form-group full">
+          <label for="productShortDescription">Short Description</label>
+          <textarea id="productShortDescription" rows="3"></textarea>
+        </div>
+  
+        <div class="form-group full">
+          <label for="productDescription">Description</label>
+          <textarea id="productDescription" rows="6"></textarea>
+        </div>
+  
+        <div class="form-group full">
+            <label>Main Image</label>
+            <input type="file" id="productImage1" accept="image/*" />
+            <div class="image-preview" id="preview1"></div>
+          </div>
+          
+          <div class="form-group full">
+            <label>Image 2 (Optional)</label>
+            <input type="file" id="productImage2" accept="image/*" />
+            <div class="image-preview" id="preview2"></div>
+          </div>
+          
+          <div class="form-group full">
+            <label>Image 3 (Optional)</label>
+            <input type="file" id="productImage3" accept="image/*" />
+            <div class="image-preview" id="preview3"></div>
+          </div>
+          
+          <div class="form-group full">
+            <label>Image 4 (Optional)</label>
+            <input type="file" id="productImage4" accept="image/*" />
+            <div class="image-preview" id="preview4"></div>
+          </div>
+  
+        <div class="checkbox-row">
+          <label class="check-wrap">
+            <input type="checkbox" id="productActive" checked />
+            <span>In Stock / Active</span>
+          </label>
+  
+          <label class="check-wrap">
+            <input type="checkbox" id="productFeatured" />
+            <span>Featured Product</span>
+          </label>
+        </div>
+  
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancelProductModalBtn">Cancel</button>
+          <button type="submit" class="primary-btn" id="saveProductBtn">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+    </main>
+  </div>
+  <div class="admin-modal" id="orderDetailsModal" aria-hidden="true">
+    <div class="admin-modal-backdrop" data-close-order-modal></div>
+  
+    <div class="admin-modal-dialog order-modal-dialog">
+      <div class="admin-modal-head">
+        <h2>Order Details</h2>
+        <button type="button" class="modal-close-btn" id="closeOrderModalBtn" aria-label="Close">
+          ×
+        </button>
+      </div>
+  
+      <div class="order-details-content">
+        <div class="order-details-top">
+          <div class="order-detail-card">
+            <span>Order ID</span>
+            <strong id="orderDetailNumber">-</strong>
+          </div>
+  
+          <div class="order-detail-card">
+            <span>Customer</span>
+            <strong id="orderDetailCustomer">-</strong>
+          </div>
+  
+          <div class="order-detail-card">
+            <span>Date</span>
+            <strong id="orderDetailDate">-</strong>
+          </div>
+  
+          <div class="order-detail-card">
+            <span>Total</span>
+            <strong id="orderDetailTotal">-</strong>
+          </div>
+        </div>
+  
+        <div class="order-detail-block">
+          <h3>Items</h3>
+          <div id="orderDetailItems" class="order-detail-items">
+            <div class="panel-empty">No items found.</div>
+          </div>
+        </div>
+  
+        <div class="order-detail-block">
+          <h3>Shipping / Customer Info</h3>
+          <div id="orderDetailAddress" class="order-detail-address">
+            <div class="panel-empty">No address details available.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="admin-modal" id="knowledgeModal" aria-hidden="true">
+    <div class="admin-modal-backdrop" data-close-knowledge-modal></div>
+  
+    <div class="admin-modal-dialog knowledge-modal-dialog">
+      <div class="admin-modal-head">
+        <h2 id="knowledgeModalTitle">Add Knowledge</h2>
+        <button type="button" class="modal-close-btn" id="closeKnowledgeModalBtn" aria-label="Close">
+          ×
+        </button>
+      </div>
+  
+      <form id="knowledgeForm" class="product-form">
+        <input type="hidden" id="knowledgeId" />
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="knowledgeCategory">Category</label>
+            <input
+              type="text"
+              id="knowledgeCategory"
+              placeholder="Example: Shipping"
+              required
+            />
+          </div>
+  
+          <div class="form-group">
+            <label for="knowledgeActive">Status</label>
+            <select id="knowledgeActive">
+              <option value="true">Active</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+        </div>
+  
+        <div class="form-group full">
+          <label for="knowledgeQuestion">Question</label>
+          <input
+            type="text"
+            id="knowledgeQuestion"
+            placeholder="Enter the customer question"
+            required
+          />
+        </div>
+  
+        <div class="form-group full">
+          <label for="knowledgeAnswer">Answer</label>
+          <textarea
+            id="knowledgeAnswer"
+            placeholder="Enter the answer the AI should use"
+            required
+          ></textarea>
+        </div>
+  
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancelKnowledgeModalBtn">Cancel</button>
+          <button type="submit" class="primary-btn" id="saveKnowledgeBtn">Save Knowledge</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="admin-confirm-modal" id="adminConfirmModal" aria-hidden="true">
+    <div class="admin-confirm-backdrop" id="adminConfirmBackdrop"></div>
+  
+    <div class="admin-confirm-box">
+      <div class="admin-confirm-icon">!</div>
+      <h3 id="adminConfirmTitle">Are you sure?</h3>
+      <p id="adminConfirmText">This action cannot be undone.</p>
+  
+      <div class="admin-confirm-actions">
+        <button type="button" class="admin-confirm-cancel" id="adminConfirmCancel">
+          Cancel
+        </button>
+        <button type="button" class="admin-confirm-delete" id="adminConfirmDelete">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

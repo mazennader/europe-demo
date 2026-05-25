@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms & Conditions | LuxeStore</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    (function () {
+      const SUPABASE_URL = "https://jtodaxyrnshrvfbsvcru.supabase.co";
+      const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+
+      const root = document.documentElement;
+      root.classList.add("site-settings-loading");
+
+      function applyTheme(settings) {
+        if (!settings) return;
+        if (settings.primary_color) root.style.setProperty("--gold", settings.primary_color);
+        if (settings.secondary_color) root.style.setProperty("--gold-dark", settings.secondary_color);
+        if (settings.accent_color) root.style.setProperty("--text", settings.accent_color);
+        if (settings.background_color) root.style.setProperty("--bg", settings.background_color);
+      }
+
+      try {
+        const cached = localStorage.getItem("site_settings_cache");
+        if (cached) applyTheme(JSON.parse(cached));
+      } catch (e) {}
+
+      window.__siteSettingsBoot = async function () {
+        try {
+          if (!window.db) {
+  window.db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+const { data, error } = await window.db
+            .from("site_settings")
+            .select("*")
+            .limit(1)
+            .maybeSingle();
+
+          if (data) {
+            localStorage.setItem("site_settings_cache", JSON.stringify(data));
+            applyTheme(data);
+          }
+        } catch (e) {
+          console.error(e);
+        } finally {
+          root.classList.remove("site-settings-loading");
+          root.classList.add("site-settings-ready");
+        }
+      };
+
+      window.__siteSettingsBoot();
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --bg:#f3f3f3;
+      --text:#050505;
+      --gold:#d0aa2b;
+      --gold-dark:#c29a18;
+    }
+    html.site-settings-loading body{ visibility:hidden; }
+    html.site-settings-ready body{ visibility:visible; }
+  </style>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body data-page="static" data-policy-page="terms">
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-badge">AI</span>
+      <span class="brand-text" data-site-store-name>LuxeStore</span>
+    </a>
+
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" type="button" aria-label="Search" data-search-open>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M20 20l-3.5-3.5"></path>
+        </svg>
+      </button>
+      <a href="wishlist.html" class="icon-btn wishlist-header-link" aria-label="Wishlist" data-wishlist-link>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"></path>
+        </svg>
+        <span class="wishlist-count" id="wishlistCount">0</span>
+      </a>
+
+      <a href="login.html" class="icon-btn" aria-label="Account" data-account-link>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 20c1.8-4 5-6 8-6s6.2 2 8 6"></path>
+        </svg>
+      </a>
+
+      <a href="cart.html" class="icon-btn cart-link" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="20" r="1"></circle>
+          <circle cx="18" cy="20" r="1"></circle>
+          <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 7H7"></path>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
+      <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" y1="7" x2="20" y2="7"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="17" x2="20" y2="17"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+<div class="mobile-nav-panel" id="mobileNavPanel" aria-hidden="true">
+  <nav class="mobile-nav-links" aria-label="Mobile navigation">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+<main class="legal-page">
+  <section class="legal-hero">
+    <div class="container legal-hero-inner">
+      <div class="legal-title-row">
+        <div class="legal-hero-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 3v15" />
+            <path d="M8 21h8" />
+            <path d="M5 7h14" />
+            <path d="M7.5 7 4 13h7L7.5 7Z" />
+            <path d="M16.5 7 13 13h7l-3.5-6Z" />
+          </svg>
+        </div>
+        <h1>Terms & Conditions</h1>
+      </div>
+
+      <p>Please read these terms carefully before using our services.</p>
+    </div>
+  </section>
+
+  <section class="legal-content-wrap">
+    <div class="container">
+      <div class="terms-notice-box">
+        <div class="terms-notice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v4"></path>
+            <path d="M12 16h.01"></path>
+          </svg>
+        </div>
+
+        <div class="terms-notice-copy">
+          <h3>Important Notice</h3>
+          <p>
+            By using LuxeStore, you agree to these terms and conditions.
+            If you do not agree, please do not use our services.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="legal-content-wrap terms-content-top">
+    <div class="container">
+      <article class="legal-content-card">
+        <div id="policyContent" class="policy-content">Loading terms and conditions...</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="legal-cta">
+    <div class="container">
+      <div class="legal-cta-box terms-cta-box">
+        <div class="terms-cta-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="M3 7l9 6 9-6"></path>
+          </svg>
+          <h2>Legal Inquiries</h2>
+        </div>
+
+        <p>For questions about these terms or legal matters:</p>
+
+        <div class="legal-cta-actions">
+          <a href="#" class="legal-cta-btn light" data-site-email-link>
+            Email <span data-site-email-text>legal@luxestore.com</span>
+          </a>
+          <a href="#" class="legal-cta-btn gold" data-site-phone-link>
+            Call <span data-site-phone-text>+1 (555) 123-4567</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="index.html" class="brand footer-brand">
+        <span class="brand-badge">AI</span>
+        <span class="brand-text" data-site-store-name>LuxeStore</span>
+      </a>
+      <div class="footer-brand-block">
+        <p data-site-footer-about>Premium AI-powered e-commerce platform for luxury products.</p>
+      </div>
+    </div>
+
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">My Account</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Customer Service</h4>
+      <ul>
+        <li><a href="shipping.html">Shipping Info</a></li>
+        <li><a href="returns.html">Returns</a></li>
+        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+        <li><a href="terms.html">Terms &amp; Conditions</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Stay Updated</h4>
+      <p>Subscribe to our newsletter for exclusive offers.</p>
+
+      <div class="socials">
+        <a href="#" aria-label="Facebook" data-site-facebook>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+          </svg>
+        </a>
+        <a href="#" aria-label="Instagram" data-site-instagram>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1"></circle>
+          </svg>
+        </a>
+        <a href="#" aria-label="Twitter" data-site-twitter>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 4.5c-.7.3-1.5.5-2.3.6a4 4 0 0 0 1.7-2.2 8.2 8.2 0 0 1-2.6 1A4.1 4.1 0 0 0 12 7.6a11.6 11.6 0 0 1-8.4-4.2 4.1 4.1 0 0 0 1.3 5.4 4 4 0 0 1-1.8-.5v.1a4.1 4.1 0 0 0 3.3 4 4.8 4.8 0 0 1-1.8.1 4.1 4.1 0 0 0 3.8 2.8A8.3 8.3 0 0 1 2 18.3a11.7 11.7 0 0 0 6.3 1.8c7.5 0 11.6-6.2 11.6-11.6v-.5A8.3 8.3 0 0 0 22 4.5z"></path>
+          </svg>
+        </a>
+        <a href="#" aria-label="Mail" data-site-social-email>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="M3 7l9 6 9-6"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>© 2026 <span data-site-store-name>LuxeStore</span>. All rights reserved.</p>
+  </div>
+</footer>
+
+<button class="chat-toggle" id="chatToggle" type="button" aria-label="Open chat">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+  </svg>
+</button>
+
+<div class="chat-widget" id="chatWidget" aria-hidden="true">
+  <div class="chat-header">
+    <div class="chat-title-wrap">
+      <div class="chat-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3l1.6 3.8L18 8.4l-3.3 2.4 1.1 4.1L12 12.8 8.2 15l1.1-4.1L6 8.4l4.4-1.6L12 3z"></path>
+        </svg>
+      </div>
+      <div>
+        <h3>LuxeStore Assistant</h3>
+        <span>Online now</span>
+      </div>
+    </div>
+    <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">×</button>
+  </div>
+
+  <div class="chat-body">
+    <div class="chat-message">Hi! How can I help you today?</div>
+  </div>
+
+  <form class="chat-input-row" id="chatForm">
+    <input type="text" placeholder="Type your message..." />
+    <button type="submit" aria-label="Send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 2 11 13"></path>
+        <path d="M22 2 15 22 11 13 2 9 22 2z"></path>
+      </svg>
+    </button>
+  </form>
+</div>
+<div class="search-overlay" id="searchOverlay" aria-hidden="true">
+  <div class="search-backdrop" data-search-close></div>
+
+  <div class="search-modal">
+    <div class="search-modal-top">
+      <h2>Search products</h2>
+      <button type="button" class="search-close-btn" data-search-close>×</button>
+    </div>
+
+    <div class="search-input-wrap">
+      <input type="text" id="globalSearchInput" placeholder="Search for products..." autocomplete="off" />
+    </div>
+
+    <div class="search-results" id="globalSearchResults">
+      <p class="search-empty">Start typing to search products.</p>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="global.js"></script>
+</body>
+</html>
