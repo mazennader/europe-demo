@@ -7332,3 +7332,9 @@ body[data-page="cart"] .cart-empty-wrapper {
   object-fit: cover;
   border-radius: 12px;
 }
+
+.loader-logo{
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
