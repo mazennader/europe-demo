@@ -172,9 +172,9 @@ function hidePageLoader() {
   const loader = document.getElementById("pageLoader");
   if (!loader) return;
 
-  setTimeout(() => {
+  requestAnimationFrame(() => {
     loader.classList.add("is-hidden");
-  }, 450);
+  });
 }
 
 function showGridSkeleton(container, count = 6) {
