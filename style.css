@@ -195,11 +195,13 @@ img {
    HERO
 ========================= */
 .hero {
-  min-height: calc(100vh - var(--header-h));
+  min-height: 640px;
+  height: 72vh;
+  max-height: 720px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 58px 0 64px;
+  padding: 42px 0 48px;
 }
 
 .hero-inner {
