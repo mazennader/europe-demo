@@ -218,8 +218,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (page === "success") initSuccessPage();
     if (page === "cart") initCartPage();
     if (page === "home") {
-      await initHomeFeaturedProducts();
-      await initHomeFeaturedReviews();
+      initHomeFeaturedProducts();
+      initHomeFeaturedReviews();
     }
     if (page === "shop") await initShopPage();
     if (page === "product-details") await initProductDetailsPage();
